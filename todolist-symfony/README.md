@@ -1,77 +1,81 @@
-Symfony Standard Edition
-========================
+TodoList avec symfony 3.4
 
-**WARNING**: This distribution does not support Symfony 4. See the
-[Installing & Setting up the Symfony Framework][15] page to find a replacement
-that fits you best.
+Travailler avec Git :
 
-Welcome to the Symfony Standard Edition - a fully-functional Symfony
-application that you can use as the skeleton for your new applications.
-
-For details on how to download and get started with Symfony, see the
-[Installation][1] chapter of the Symfony Documentation.
-
-What's inside?
---------------
-
-The Symfony Standard Edition is configured with the following defaults:
-
-  * An AppBundle you can use to start coding;
-
-  * Twig as the only configured template engine;
-
-  * Doctrine ORM/DBAL;
-
-  * Swiftmailer;
-
-  * Annotations enabled for everything.
-
-It comes pre-configured with the following bundles:
-
-  * **FrameworkBundle** - The core Symfony framework bundle
-
-  * [**SensioFrameworkExtraBundle**][6] - Adds several enhancements, including
-    template and routing annotation capability
-
-  * [**DoctrineBundle**][7] - Adds support for the Doctrine ORM
-
-  * [**TwigBundle**][8] - Adds support for the Twig templating engine
-
-  * [**SecurityBundle**][9] - Adds security by integrating Symfony's security
-    component
-
-  * [**SwiftmailerBundle**][10] - Adds support for Swiftmailer, a library for
-    sending emails
-
-  * [**MonologBundle**][11] - Adds support for Monolog, a logging library
-
-  * **WebProfilerBundle** (in dev/test env) - Adds profiling functionality and
-    the web debug toolbar
-
-  * **SensioDistributionBundle** (in dev/test env) - Adds functionality for
-    configuring and working with Symfony distributions
-
-  * [**SensioGeneratorBundle**][13] (in dev env) - Adds code generation
-    capabilities
-
-  * [**WebServerBundle**][14] (in dev env) - Adds commands for running applications
-    using the PHP built-in web server
-
-  * **DebugBundle** (in dev/test env) - Adds Debug and VarDumper component
-    integration
-
-All libraries and bundles included in the Symfony Standard Edition are
-released under the MIT or BSD license.
-
-Enjoy!
-
-[1]:  https://symfony.com/doc/3.4/setup.html
-[6]:  https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/index.html
-[7]:  https://symfony.com/doc/3.4/doctrine.html
-[8]:  https://symfony.com/doc/3.4/templating.html
-[9]:  https://symfony.com/doc/3.4/security.html
-[10]: https://symfony.com/doc/3.4/email.html
-[11]: https://symfony.com/doc/3.4/logging.html
-[13]: https://symfony.com/doc/current/bundles/SensioGeneratorBundle/index.html
-[14]: https://symfony.com/doc/current/setup/built_in_web_server.html
-[15]: https://symfony.com/doc/current/setup.html
+* Clone le projet :
+```sh
+$ git clone git@github.com:Mathieu33260/todolist-symfony.git
+```
+ou avec https
+```sh
+$ git clone https://github.com/Mathieu33260/todolist-symfony.git
+```
+* Au moment de commit :
+```sh
+$ git checkout -b nom_de_la_feature
+```
+ça crée une nouvelle branche et t'y amènes dessus
+* On ajoute les nouveaux fichiers :
+```sh
+$ git add *
+```
+des warnings peuvent apparaitre mais c'est pas important 
+du moment qu'ils ont bien été ajouté.<br>
+Hésites pas à checker si ils ont été ajouté avec :
+```sh
+$ git status
+```
+Si ils sont marqués comme ``untracked`` c'est qu'ils sont
+pas ajouté et il faut donc faire un ``git add *``.
+* Ensuite on commit :
+```sh
+$ git commit -m "Le message décrivant ce que t'as fait"
+```
+* Puis on push :
+```sh
+$ git push -u origin nom_de_la_feature
+```
+A partir de là ton travail est sur le dépôt distant (github).
+* On retourne sur la branche ``master``:
+```sh
+$ git checkout master
+```
+* On récupère le travail fait pendant qu'on travaillait sur 
+notre branche :
+```sh
+$ git pull
+```
+* Puis on retourne à nouveau sur notre branche :
+```sh
+$ git checkout nom_de_la_feature
+```
+* Il faut maintenant mettre à jour ta branche pour la fusionner
+ avec la branche ``master`` sans faire de conflits :
+```sh
+$ git rebase -i master
+```
+Le ``-i`` signifie interactif, dans le sens ou git applique
+chacun de tes commits un par un jusqu'à avoir totalement ``rebase``
+ta branche avec ``master``. Très pratique pour résoudre d'éventuels
+conflits, mais un peu long si t'as beaucoup de commits sur ta branche.
+* On a réécrit l'historique de la branche, il faut donc la push
+à nouveau :
+```sh
+$ git push --f
+```
+Le ``--f`` signifie force, car git n'aime pas trop 
+qu'on réécrive l'historique. Après un ``rebase`` et un 
+``push --f``, si on est plusieurs à travailler sur la branche
+en question, les autres développeurs doivent supprimer 
+leur branche (celle qui vient d'être ``rebase``), puis faire
+un ``git pull`` pour récupérer la branche à nouveau.
+* Pour finir faut aller sur 
+<a href="https://github.com/Mathieu33260/todolist-symfony/branches">la liste des branches</a>
+du projet (le lien y amène direct), cliquer sur "New pull request"
+, assigner un "Reviewer" (en haut à droite) et cliquer sur "Create pull request".
+* Le "Reviewer" regardera ensuite les changements apportés par
+la branche et approuvera ou non ces changements.
+* Si les changements sont approuvés, il faut cliquer sur "Merge pull request",
+la branche ``nom_de_la_feature`` sera ainsi merger dans ``master``.
+* En retournant sur la branche ``master`` et en faisant 
+un ``git pull`` on retrouve les changements apportés.

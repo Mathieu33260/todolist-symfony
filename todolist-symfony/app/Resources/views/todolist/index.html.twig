@@ -1,5 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
+    <ul>
+        {% for task in tasks %}
+            <li>
+                {{ task.name }}, {{ task.priority }}
+                <a href="{{ path('edittask', {'id' : task.id}) }}">Editer</a>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

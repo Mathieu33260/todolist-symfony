@@ -7,9 +7,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use AppBundle\Model\Task;
 
-/**
- * @Route("/todolist")
- */
 class TodolistController extends Controller
 {
     /**
@@ -18,8 +15,10 @@ class TodolistController extends Controller
     public function indexAction(Request $request)
     {
         $tasks = $this->get('session')->get('tasks');
-        var_dump($tasks);
-        return $this->render('todolist/index.html.twig');
+        return $this->render('todolist/index.html.twig',
+            [
+                'tasks' => $tasks
+            ]);
     }
 
     /**
@@ -27,7 +26,11 @@ class TodolistController extends Controller
      */
     public function addAction(Request $request)
     {
-        $this->get('session')->set('tasks', [new Task(1,'la tache',3)]);
+        $tasks = $this->get('session')->get('tasks');
+        $tasks[] = new Task(
+            $request->get('name'),
+            $request->get('priority'));
+        $this->get('session')->set('tasks', $tasks);
         return $this->render('todolist/add.html.twig');
     }
 
@@ -36,8 +39,14 @@ class TodolistController extends Controller
      */
     public function editAction(Request $request)
     {
-
-        return $this->render('todolist/edit.html.twig');
+        $tasks = $this->get('session')->get('tasks');
+        $taskReturn = null;
+        foreach($tasks as $task) {
+            if($task->id == $request->get('id')) {
+                $taskReturn = $task;
+            }
+        }
+        return $this->render('todolist/edit.html.twig', ['task' => $taskReturn]);
     }
 
     /**
