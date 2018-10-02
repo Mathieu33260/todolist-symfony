@@ -14,9 +14,11 @@ class TodolistController extends Controller
      */
     public function indexAction(Request $request)
     {
+        $users = $this->get('session')->get('users');
         $tasks = $this->get('session')->get('tasks');
         return $this->render('todolist/index.html.twig',
             [
+                'users' => $users,
                 'tasks' => $tasks
             ]);
     }
@@ -26,12 +28,17 @@ class TodolistController extends Controller
      */
     public function addAction(Request $request)
     {
+        $users = $this->get('session')->get('users');
         $tasks = $this->get('session')->get('tasks');
-        $tasks[] = new Task(
-            $request->get('name'),
-            $request->get('priority'));
-        $this->get('session')->set('tasks', $tasks);
-        return $this->render('todolist/add.html.twig');
+        if($request->get('name')) {
+            $tasks[] = new Task(
+                $request->get('name'),
+                $request->get('priority'),
+                $request->get('userid'));
+            $this->get('session')->set('tasks', $tasks);
+        }
+
+        return $this->redirectToRoute('todolist');
     }
 
     /**

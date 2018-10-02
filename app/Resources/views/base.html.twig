@@ -5,23 +5,14 @@
         <title>{% block title %}Todolist{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-        <!-- Compiled and minified CSS -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
-        <!-- Compiled and minified JavaScript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
+        <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
 
     </head>
     <body>
-    <nav>
-        <div class="nav-wrapper">
-            <a href="{{ path('todolist') }}" class="brand-logo">Todolist</a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="{{ path('addtask') }}">Add</a></li>
-            </ul>
-        </div>
-    </nav>
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        <script src="{{ asset('js/jquery.min.js') }}"></script>
+        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     </body>
 </html>

@@ -15,9 +15,9 @@ class User {
     /** @var ArrayCollection $tasksId */
     private $tasksId;
 
-    public function __construct($id,$pseudo)
+    public function __construct($pseudo)
     {
-        $this->id = $id;
+        $this->id = uniqid();;
         $this->pseudo = $pseudo;
         $this->tasksId = new ArrayCollection();
     }
