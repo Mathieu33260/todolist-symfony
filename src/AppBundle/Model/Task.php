@@ -102,5 +102,21 @@ class Task {
         $this->userId = $userId;
     }
 
+    /**
+     * @return bool
+     */
+    public function isDone()
+    {
+        return $this->done;
+    }
+
+    /**
+     * @param bool $done
+     */
+    public function setDone($done)
+    {
+        $this->done = $done;
+    }
+
 
 }

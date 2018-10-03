@@ -5,19 +5,53 @@
 
         <h1 class="col-lg-12 text-center">TodoList</h1>
 
-        <div class="col-lg-5 d-flex justify-content-center">
+        <div class="col-lg-8 d-flex justify-content-center">
             <ul class="col-lg-12 list-group list-group-flush">
                 {% for task in tasks %}
                     <li class="list-group-item">
-                        {{ task.name }}
-                        <span class="secondary-content">
-                            <a href="{{ path('edittask', {'id' : task.id}) }}" class="waves-effect waves-light btn-small">
-                                Editer
-                            </a>
-                            <a href="{{ path('deletetask', {'id' : task.id}) }}" class="waves-effect waves-light btn-small red">
-                                Supprimer
-                            </a>
-                        </span>
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <form id="editTask" action="{{ path('edittask', {'id' : task.id}) }}" method="post">
+                                    <input value="{{ task.name }}" name="name" type="text"
+                                           id="name" placeholder="Name">
+
+                                    <input {% if task.priority is not null %}value="{{ task.priority }}"{% endif %}
+                                           name="priority" type="number" id="priority" placeholder="Priority">
+
+                                    <label for="done">DONE</label>
+                                    <input value="done" name="done" type="checkbox" id="done" {% if task.done %}checked{% endif %}>
+                                </form>
+                            </div>
+                            <div class="col-lg-2">
+                                <form id="assignUser" action="{{ path('assignUser', {'taskid' : task.id}) }}" method="post">
+                                    <select name="userid" id="user">
+                                        {% if task.userid is null %}
+                                            <option value="" disabled selected>Pick a user</option>
+                                        {% endif %}
+                                        {% for user in users %}
+                                            {% if task.userId == user.id %}
+                                                <option selected value="{{ user.id }}">{{ user.pseudo }}</option>
+                                            {% else %}
+                                                <option value="{{ user.id }}">{{ user.pseudo }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </form>
+                            </div>
+                            <div class="col-lg-5">
+                                <button form="assignUser" type="submit" class="btn btn-success">Assign user</button>
+                                <button form="editTask" type="submit" class="btn btn-primary">Edit Task</button>
+                                <a href="{{ path('deletetask', {'id' : task.id}) }}" class="btn btn-danger">
+                                    Delete Task
+                                </a>
+                            </div>
+                        </div>
+
+
+
+                        {#<span class="secondary-content float-right">#}
+                            {##}
+                        {#</span>#}
                     </li>
                 {% endfor %}
             </ul>

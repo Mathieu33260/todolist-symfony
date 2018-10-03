@@ -48,12 +48,16 @@ class TodolistController extends Controller
     {
         $tasks = $this->get('session')->get('tasks');
         $taskReturn = null;
+        /** @var Task $task */
         foreach($tasks as $task) {
-            if($task->id == $request->get('id')) {
-                $taskReturn = $task;
+            if($task->getId() == $request->get('id')) {
+                $task->setName($request->get('name'));
+                $task->setPriority($request->get('priority'));
+                $task->setDone($request->request->has('done'));
             }
         }
-        return $this->render('todolist/edit.html.twig', ['task' => $taskReturn]);
+        $this->get('session')->set('tasks', $tasks);
+        return $this->redirectToRoute('todolist');
     }
 
     /**
@@ -62,6 +66,8 @@ class TodolistController extends Controller
     public function deleteAction(Request $request)
     {
 
-        return $this->render('todolist/delete.html.twig');
+
+
+        return $this->redirectToRoute('todolist');
     }
 }
