@@ -70,4 +70,23 @@ class TodolistController extends Controller
 
         return $this->redirectToRoute('todolist');
     }
+
+    /**
+     * @Route("/filter", name="filter")
+     */
+    public function filterAction(Request $request)
+    {
+        switch($request->get('by')) {
+            case 'done':
+                break;
+            case 'undone':
+                break;
+            case 'all':
+                break;
+            default:
+                break;
+        }
+
+        return $this->redirectToRoute('todolist');
+    }
 }
