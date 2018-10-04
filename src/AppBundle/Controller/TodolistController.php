@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Service\TaskService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,16 +11,24 @@ use AppBundle\Model\Task;
 class TodolistController extends Controller
 {
     /**
+     * Sert aussi à filtrer via le TaskService
      * @Route("/", name="todolist")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, TaskService $taskService)
     {
         $users = $this->get('session')->get('users');
         $tasks = $this->get('session')->get('tasks');
+        $filter = ($request->get('filter')) ? $request->get('filter') : $this->get('session')->get('filter');
+        if($filter && $tasks) {
+            $this->get('session')->set('filter', $filter);
+            $tasks = $taskService->filter($tasks,$filter);
+        }
+
         return $this->render('todolist/index.html.twig',
             [
                 'users' => $users,
-                'tasks' => $tasks
+                'tasks' => $tasks,
+                'filter' => $filter
             ]);
     }
 
@@ -74,25 +83,6 @@ class TodolistController extends Controller
             $cpt++;
         }
         $this->get('session')->set('tasks', $tasks);
-        return $this->redirectToRoute('todolist');
-    }
-
-    /**
-     * @Route("/filter", name="filter")
-     */
-    public function filterAction(Request $request)
-    {
-        switch($request->get('by')) {
-            case 'done':
-                break;
-            case 'undone':
-                break;
-            case 'all':
-                break;
-            default:
-                break;
-        }
-
         return $this->redirectToRoute('todolist');
     }
 }
