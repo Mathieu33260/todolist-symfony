@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Service\TaskService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,16 +11,24 @@ use AppBundle\Model\Task;
 class TodolistController extends Controller
 {
     /**
+     * Sert aussi à filtrer via le TaskService
      * @Route("/", name="todolist")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, TaskService $taskService)
     {
         $users = $this->get('session')->get('users');
         $tasks = $this->get('session')->get('tasks');
+        $filter = ($request->get('filter')) ? $request->get('filter') : $this->get('session')->get('filter');
+        if($filter && $tasks) {
+            $this->get('session')->set('filter', $filter);
+            $tasks = $taskService->filter($tasks,$filter);
+        }
+
         return $this->render('todolist/index.html.twig',
             [
                 'users' => $users,
-                'tasks' => $tasks
+                'tasks' => $tasks,
+                'filter' => $filter
             ]);
     }
 
@@ -47,7 +56,6 @@ class TodolistController extends Controller
     public function editAction(Request $request)
     {
         $tasks = $this->get('session')->get('tasks');
-        $taskReturn = null;
         /** @var Task $task */
         foreach($tasks as $task) {
             if($task->getId() == $request->get('id')) {
@@ -65,9 +73,16 @@ class TodolistController extends Controller
      */
     public function deleteAction(Request $request)
     {
-
-
-
+        $tasks = $this->get('session')->get('tasks');
+        $cpt = 0;
+        /** @var Task $task */
+        foreach($tasks as $task) {
+            if($task->getId() == $request->get('id')) {
+                array_splice($tasks, $cpt, 1);
+            }
+            $cpt++;
+        }
+        $this->get('session')->set('tasks', $tasks);
         return $this->redirectToRoute('todolist');
     }
 }
