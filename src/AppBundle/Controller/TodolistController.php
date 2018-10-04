@@ -47,7 +47,6 @@ class TodolistController extends Controller
     public function editAction(Request $request)
     {
         $tasks = $this->get('session')->get('tasks');
-        $taskReturn = null;
         /** @var Task $task */
         foreach($tasks as $task) {
             if($task->getId() == $request->get('id')) {
@@ -65,9 +64,16 @@ class TodolistController extends Controller
      */
     public function deleteAction(Request $request)
     {
-
-
-
+        $tasks = $this->get('session')->get('tasks');
+        $cpt = 0;
+        /** @var Task $task */
+        foreach($tasks as $task) {
+            if($task->getId() == $request->get('id')) {
+                array_splice($tasks, $cpt, 1);
+            }
+            $cpt++;
+        }
+        $this->get('session')->set('tasks', $tasks);
         return $this->redirectToRoute('todolist');
     }
 
