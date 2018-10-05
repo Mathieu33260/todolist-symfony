@@ -55,4 +55,22 @@ class UserController extends Controller
 
         return $this->redirectToRoute('todolist');
     }
+
+    /**
+     * @Route("/remove", name="removeuser")
+     */
+    public function removeAction(Request $request)
+    {
+        $users = $this->get('session')->get('users');
+        $cpt = 0;
+        /** @var User $user */
+        foreach($users as $user) {
+            if($user->getId() == $request->get('id')) {
+                array_splice($users, $cpt, 1);
+            }
+            $cpt++;
+        }
+        $this->get('session')->set('users', $users);
+        return $this->redirectToRoute('todolist');
+    }
 }
