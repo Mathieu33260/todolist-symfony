@@ -106,5 +106,18 @@
             </form>
         </div>
 
+        {% if users is not null and users is not empty %}
+            <ul>User list
+                {% for user in users %}
+                    <li>
+                        {{ user.pseudo }}
+                        <a href="{{ path('removeuser', {'id' : user.id}) }}" class="btn btn-danger">
+                            Remove user
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
     </div>
 {% endblock %}
