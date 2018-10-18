@@ -43,12 +43,16 @@
                             <div class="col-lg-2">
                                 <form id="assignUser" action="{{ path('assignUser', {'taskid' : task.id}) }}" method="post">
                                     <select name="userid" id="user">
-                                        {% if task.userid is null %}
+                                        {% if task.user is null %}
                                             <option value="" disabled selected>Pick a user</option>
+                                        {% else %}
+                                            <option selected value="{{ task.user.id }}">{{ task.user.pseudo }}</option>
                                         {% endif %}
                                         {% for user in users %}
-                                            {% if task.userId == user.id %}
-                                                <option selected value="{{ user.id }}">{{ user.pseudo }}</option>
+                                            {% if task.user is not null %}
+                                                {% if task.user.id != user.id %}
+                                                    <option value="{{ user.id }}">{{ user.pseudo }}</option>
+                                                {% endif %}
                                             {% else %}
                                                 <option value="{{ user.id }}">{{ user.pseudo }}</option>
                                             {% endif %}

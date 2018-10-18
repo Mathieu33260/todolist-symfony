@@ -2,31 +2,89 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Model\Task;
+use AppBundle\Entity\Task;
+use AppBundle\Entity\User;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManagerInterface;
 
 class TaskService
 {
-    public function filter($tasks, $by)
+    /**
+     * @var EntityManagerInterface $entityManager
+     */
+    private $entityManager;
+
+    /**
+     * @var FilterService $filterService
+     */
+    private $filterService;
+
+    /**
+     * @var UserService $userService
+     */
+    private $userService;
+
+    public function __construct(EntityManagerInterface $entityManager, FilterService $filterService, UserService $userService)
     {
-        $tasksDone = [];
-        $tasksUndone = [];
-        /** @var Task $task */
-        foreach($tasks as $task) {
-            if($task->isDone()) {
-                $tasksDone[] = $task;
-            } else {
-                $tasksUndone[] = $task;
-            }
-        }
-        switch ($by) {
+        $this->entityManager = $entityManager;
+        $this->filterService = $filterService;
+        $this->userService = $userService;
+    }
+
+    /**
+     * @param string|null $paramFilter
+     * @return Collection|Task[]
+     */
+    public function filter($paramFilter = null)
+    {
+        $filter = ($paramFilter ? $paramFilter : $this->filterService->getFilter());
+        switch ($filter) {
             case 'done';
-                return $tasksDone;
+                return $this->entityManager->getRepository(Task::class)->findBy(['done' => true]);
                 break;
             case 'undone':
-                return $tasksUndone;
+                return $this->entityManager->getRepository(Task::class)->findBy(['done' => false]);
                 break;
             default :
-                return $tasks;
+                return $this->entityManager->getRepository(Task::class)->findAll();
         }
+    }
+
+    public function add($name, $priority, $userId) {
+        $task = new Task();
+        $task->setName($name);
+        $task->setPriority($priority);
+        $task->setDone(false);
+
+        if($userId) {
+            /** @var User $user */
+            $user = $this->userService->get($userId);
+            $task->setUser($user);
+        }
+        $this->entityManager->persist($task);
+        $this->entityManager->flush();
+    }
+
+    public function edit($id, $name, $priority, $done, $userId) {
+        /** @var Task $task */
+        $task = $this->entityManager->getRepository(Task::class)->find($id);
+        $task->setName($name);
+        $task->setPriority($priority);
+        $task->setDone($done);
+
+        if($userId) {
+            /** @var User $user */
+            $user = $this->userService->get($userId);
+            $task->setUser($user);
+        }
+        $this->entityManager->persist($task);
+        $this->entityManager->flush();
+    }
+
+    public function delete($id) {
+        /** @var Task $task */
+        $task = $this->entityManager->getRepository(Task::class)->find($id);
+        $this->entityManager->remove($task);
+        $this->entityManager->flush();
     }
 }

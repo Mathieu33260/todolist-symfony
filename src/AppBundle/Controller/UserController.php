@@ -2,11 +2,10 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Model\User;
+use AppBundle\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use AppBundle\Model\Task;
 
 /**
  * @Route("/user")
@@ -16,12 +15,10 @@ class UserController extends Controller
     /**
      * @Route("/add", name="adduser")
      */
-    public function addAction(Request $request)
+    public function addAction(Request $request, UserService $userService)
     {
-        $users = $this->get('session')->get('users');
         if($request->get('pseudo')) {
-            $users[] = new User($request->get('pseudo'));
-            $this->get('session')->set('users', $users);
+            $userService->add($request->get('pseudo'));
         }
 
         return $this->redirectToRoute('todolist');
@@ -30,27 +27,10 @@ class UserController extends Controller
     /**
      * @Route("/assign", name="assignUser")
      */
-    public function assignAction(Request $request)
+    public function assignAction(Request $request, UserService $userService)
     {
-        $users = $this->get('session')->get('users');
-        $tasks = $this->get('session')->get('tasks');
-        if($request->get('taskid')) {
-            $taskFind = null;
-            $userFind = null;
-            /** @var Task $task */
-            foreach($tasks as $task) {
-                if($task->getId() == $request->get('taskid')) {
-                    $task->setUserId($request->get('userid'));
-                }
-            }
-            /** @var User $user */
-            foreach($users as $user) {
-                if($user->getId() == $request->get('userid')) {
-                    $user->addTask('taskid');
-                }
-            }
-            $this->get('session')->set('users', $users);
-            $this->get('session')->set('tasks', $tasks);
+        if($request->get('taskid') && $request->get('userid')) {
+            $userService->addTask($request->get('taskid'), $request->get('userid'));
         }
 
         return $this->redirectToRoute('todolist');
@@ -59,18 +39,10 @@ class UserController extends Controller
     /**
      * @Route("/remove", name="removeuser")
      */
-    public function removeAction(Request $request)
+    public function removeAction(Request $request, UserService $userService)
     {
-        $users = $this->get('session')->get('users');
-        $cpt = 0;
-        /** @var User $user */
-        foreach($users as $user) {
-            if($user->getId() == $request->get('id')) {
-                array_splice($users, $cpt, 1);
-            }
-            $cpt++;
-        }
-        $this->get('session')->set('users', $users);
+        $userService->delete($request->get('id'));
+
         return $this->redirectToRoute('todolist');
     }
 }
