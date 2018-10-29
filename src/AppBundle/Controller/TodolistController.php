@@ -39,7 +39,8 @@ class TodolistController extends Controller
             $taskService->add(
                 $request->get('name'),
                 $request->get('priority'),
-                $request->get('userid')
+                $request->get('userid'),
+                new \DateTime($request->get('date'))
             );
         }
 
@@ -56,7 +57,8 @@ class TodolistController extends Controller
             $request->get('name'),
             $request->get('priority'),
             $request->get('done'),
-            $request->get('userid')
+            $request->get('userid'),
+            new \DateTime($request->get('date'))
         );
 
         return $this->redirectToRoute('todolist');

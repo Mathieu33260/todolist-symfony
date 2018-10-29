@@ -50,10 +50,11 @@ class TaskService
         }
     }
 
-    public function add($name, $priority, $userId) {
+    public function add($name, $priority, $userId, $date) {
         $task = new Task();
         $task->setName($name);
         $task->setPriority($priority);
+        $task->setDate($date);
         $task->setDone(false);
 
         if($userId) {
@@ -65,11 +66,12 @@ class TaskService
         $this->entityManager->flush();
     }
 
-    public function edit($id, $name, $priority, $done, $userId) {
+    public function edit($id, $name, $priority, $done, $userId, $date) {
         /** @var Task $task */
         $task = $this->entityManager->getRepository(Task::class)->find($id);
         $task->setName($name);
         $task->setPriority($priority);
+        $task->setDate($date);
         $task->setDone($done);
 
         if($userId) {

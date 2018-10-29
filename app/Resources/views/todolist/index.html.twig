@@ -35,6 +35,8 @@
 
                                     <input {% if task.priority is not null %}value="{{ task.priority }}"{% endif %}
                                            name="priority" type="number" id="priority" placeholder="Priority">
+                                    <input {% if task.date is not null %} value="{{ task.date|date('-m-d') }}" {% endif %}
+                                            type="date" id="date" name="date">
 
                                     <label for="done">DONE</label>
                                     <input value="done" name="done" type="checkbox" id="done" {% if task.done %}checked{% endif %}>
@@ -98,6 +100,13 @@
                         {% endfor %}
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <fieldset>
+                        <legend>Selectionner une date</legend>
+                        <input type="date" id="date" name="date">
+                    </fieldset>
+                </div>
                 <button type="submit" class="btn btn-primary">Add task</button>
             </form>
 
@@ -114,7 +123,7 @@
             <ul>User list
                 {% for user in users %}
                     <li>
-                        {{ user.pseudo }}
+                        <a href="{{ path('userlist', {'id' : user.id }) }}">{{ user.pseudo }}</a>
                         <a href="{{ path('removeuser', {'id' : user.id}) }}" class="btn btn-danger">
                             Remove user
                         </a>

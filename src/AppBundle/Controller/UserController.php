@@ -45,4 +45,17 @@ class UserController extends Controller
 
         return $this->redirectToRoute('todolist');
     }
+
+    /**
+     * @Route("/userlist", name="userlist")
+     */
+    public function listUser(Request $request, UserService $userService){
+        $userlist = $userService->get($request->get('id'));
+        $taskList = $userService->getP($request->get('id'));
+        return $this->render('todolist/listUser.html.twig', [
+            'user' => $userlist,
+            'tasks' => $taskList
+
+        ]);
+    }
 }
