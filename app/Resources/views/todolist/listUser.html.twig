@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 m-auto">
+                {{ user.pseudo }}
+                {% for task in tasks %}
+                    <ul>
+                        <li>{{ task.name }}{{ task.date|date('Y-m-d') }}{{ task.priority }}</li>
+                    </ul>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

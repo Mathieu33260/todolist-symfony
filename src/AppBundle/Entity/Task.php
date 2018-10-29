@@ -48,6 +48,13 @@ class Task
      */
     private $user;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="datetime", nullable=true)
+     */
+    private $date;
+
 
 
     /**
@@ -128,6 +135,22 @@ class Task
     public function setUser($user)
     {
         $this->user = $user;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param \DateTime $date
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
     }
 
 }

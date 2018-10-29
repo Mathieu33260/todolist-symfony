@@ -65,4 +65,16 @@ class UserService
         $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
+
+    /**
+     * @param $id
+     * @return Task[]|User[]|array
+     */
+    public function getP($id)
+    {
+        /** @var User $user */
+        $user = $this->entityManager->getRepository(User::class)->find($id);
+        $tasks = $this->entityManager->getRepository(Task::class)->findBy(['user' => $user],['priority' => 'DESC']);
+        return $tasks;
+    }
 }
