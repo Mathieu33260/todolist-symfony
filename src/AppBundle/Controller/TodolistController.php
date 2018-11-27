@@ -2,7 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Task;
+use AppBundle\Form\TaskType;
 use AppBundle\Service\FilterService;
+use AppBundle\Service\SortService;
 use AppBundle\Service\TaskService;
 use AppBundle\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -11,65 +14,98 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TodolistController extends Controller
 {
+    /** @var UserService $userService */
+    private $userService;
+
+    /** @var TaskService $taskService */
+    private $taskService;
+
+    /** @var FilterService $filterService */
+    private $filterService;
+
+    /** @var SortService $sortService */
+    private $sortService;
+
+    public function __construct(UserService $userService, TaskService $taskService,
+                                FilterService $filterService, SortService $sortService)
+    {
+        $this->userService = $userService;
+        $this->taskService = $taskService;
+        $this->filterService = $filterService;
+        $this->sortService = $sortService;
+    }
+
     /**
      * @Route("/", name="todolist")
      */
-    public function indexAction(Request $request, TaskService $taskService,
-                                UserService $userService, FilterService $filterService)
+    public function indexAction()
     {
-        $users = $userService->getAll();
-        $tasks = $taskService->filter();
-        $filter = $filterService->getFilter();
+        $tasks = $this->taskService->filterSort();
+        $filter = $this->filterService->getFilter();
+        $sort = $this->sortService->getSort();
 
         return $this->render('todolist/index.html.twig',
             [
-                'users' => $users,
                 'tasks' => $tasks,
-                'filter' => $filter
+                'filter' => $filter,
+                'sort' => $sort
             ]);
     }
 
     /**
      * @Route("/add", name="addtask")
      */
-    public function addAction(Request $request, TaskService $taskService,
-                              UserService $userService, FilterService $filterService)
+    public function addAction(Request $request)
     {
-        if($request->get('name')) {
-            $taskService->add(
-                $request->get('name'),
-                $request->get('priority'),
-                $request->get('userid'),
-                new \DateTime($request->get('date'))
-            );
+        $form = $this->createForm(TaskType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $em = $this->getDoctrine()->getManager();
+
+            $em->persist($form->getData());
+            $em->flush();
+
+            return $this->redirectToRoute('todolist');
         }
 
-        return $this->redirectToRoute('todolist');
+        return $this->render('todolist/task/addTask.html.twig', ['taskForm' => $form->createView()]);
     }
 
     /**
-     * @Route("/edit", name="edittask")
+     * @Route("/edit/{id}", name="edittask")
      */
-    public function editAction(Request $request, TaskService $taskService)
+    public function updateAction(Task $task, Request $request)
     {
-        $taskService->edit(
-            $request->get('id'),
-            $request->get('name'),
-            $request->get('priority'),
-            $request->get('done'),
-            $request->get('userid'),
-            new \DateTime($request->get('date'))
-        );
+        //$task->setName($task->getName());
 
-        return $this->redirectToRoute('todolist');
+        $form = $this->createForm(TaskType::class, $task);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $em = $this->getDoctrine()->getManager();
+
+            $em->persist($form->getData());
+            $em->flush();
+
+            return $this->redirectToRoute('todolist');
+        }
+
+        return $this->render('todolist/task/editTask.html.twig',
+            [
+                'taskForm' => $form->createView(),
+                'id' => $task->getId()
+            ]);
     }
 
     /**
-     * @Route("/delete", name="deletetask")
+     * @Route("/delete/{id}", name="deletetask")
      */
-    public function deleteAction(Request $request, TaskService $taskService)
+    public function deleteAction(Task $task)
     {
-        $taskService->delete($request->get('id'));
+        $this->taskService->delete($task);
 
         return $this->redirectToRoute('todolist');
     }

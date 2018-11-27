@@ -1,16 +1,54 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3 m-auto">
-                {{ user.pseudo }}
-                {% for task in tasks %}
-                    <ul>
-                        <li>{{ task.name }}{{ task.date|date('Y-m-d') }}{{ task.priority }}</li>
-                    </ul>
-                {% endfor %}
+    <div class="col-lg-8 d-flex justify-content-center row">
+
+        {% for user in users %}
+
+            <div class="card col-lg-3" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{ user.pseudo }}
+                    </h5>
+                    {% if user.tasks|length > 0%}
+                        <h6>Tâches :</h6>
+                    {% endif %}
+                    <div class="accordion" id="accordion">
+                        {% for task in user.tasks %}
+                        <div class="card">
+                            <div class="card-header" id="heading{{ loop.index }}">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse{{ loop.index }}" aria-controls="collapse{{ loop.index }}">
+                                        {{ task.name }}
+                                    </button>
+                                    <a href="{{ path('edittask', {'id' : task.id}) }}" class="btn btn-primary">
+                                        Edit Task
+                                    </a>
+                                    <a href="{{ path('deletetask', {'id' : task.id}) }}" class="btn btn-danger">
+                                        Delete Task
+                                    </a>
+                                </h5>
+                            </div>
+
+                            <div id="collapse{{ loop.index }}" class="collapse" aria-labelledby="heading{{ loop.index }}" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>Priorité : {{ task.priority }}</p>
+                                    <p>Date : {{ task.date|date('Y-m-d') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <a href="{{ path('edituser', {'id' : user.id}) }}" class="btn btn-primary">
+                        Edit User
+                    </a>
+                    <a href="{{ path('deleteuser', {'id' : user.id}) }}" class="btn btn-danger">
+                        Delete User
+                    </a>
+                </div>
             </div>
-        </div>
+
+        {% endfor %}
     </div>
 {% endblock %}

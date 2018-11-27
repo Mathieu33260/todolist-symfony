@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block sousTitre %}Modification d'un utilisateur{% endblock %}
+
+{% block body %}
+
+    {% include 'todolist/user/partials/form.html.twig'
+        with {
+        'action': path('edituser', {'id' : id}),
+        'methode': 'PUT'
+    } %}
+
+{% endblock %}

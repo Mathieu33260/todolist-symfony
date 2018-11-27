@@ -11,7 +11,30 @@
 
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <div class="row d-flex justify-content-around">
+            <h1 class="col-lg-12 text-center">TodoList</h1>
+            <div class="col-6 d-flex justify-content-around">
+                <a href="{{ path('addtask') }}" class="btn btn-success m-2">
+                    Add Task
+                </a>
+
+                <a href="{{ path('adduser') }}" class="btn btn-success m-2">
+                    Add User
+                </a>
+
+                <a href="{{ path('todolist') }}" class="btn btn-success m-2">
+                    List Task
+                </a>
+
+                <a href="{{ path('userlist') }}" class="btn btn-success m-2">
+                    List User
+                </a>
+            </div>
+            <h3 class="col-lg-12 text-center">
+                {% block sousTitre %}{% endblock %}
+            </h3>
+            {% block body %}{% endblock %}
+        </div>
         <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     </body>
 </html>

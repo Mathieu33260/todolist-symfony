@@ -1,136 +1,80 @@
 {% extends 'base.html.twig' %}
 
+{% block sousTitre %}Liste des tâches{% endblock %}
+
 {% block body %}
-    <div class="row d-flex justify-content-around">
 
-        <h1 class="col-lg-12 text-center">TodoList</h1>
+    <div class="col-lg-12 d-flex justify-content-start">
+        <a href="{{ path('todolist', {'filter' : 'done'}) }}" class="btn btn-info m-2">
+            Filter done
+        </a>
 
-        <div class="col-lg-12 d-flex justify-content-start">
-            <a href="{{ path('todolist', {'filter' : 'done'}) }}" class="btn btn-info m-2">
-                Filter done
-            </a>
+        <a href="{{ path('todolist', {'filter' : 'undone'}) }}" class="btn btn-info m-2">
+            Filter undone
+        </a>
 
-            <a href="{{ path('todolist', {'filter' : 'undone'}) }}" class="btn btn-info m-2">
-                Filter undone
-            </a>
-
-            <a href="{{ path('todolist', {'filter' : 'all'}) }}" class="btn btn-info m-2">
-                Filter all
-            </a>
-            {% if filter is not null %}
-                Actually filter by {{ filter }}
-            {% endif %}
-        </div>
-
-        <div class="col-lg-8 d-flex justify-content-center">
-
-            <ul class="col-lg-12 list-group list-group-flush">
-                {% for task in tasks %}
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-lg-5">
-                                <form id="editTask" action="{{ path('edittask', {'id' : task.id}) }}" method="post">
-                                    <input value="{{ task.name }}" name="name" type="text"
-                                           id="name" placeholder="Name" required="required">
-
-                                    <input {% if task.priority is not null %}value="{{ task.priority }}"{% endif %}
-                                           name="priority" type="number" id="priority" placeholder="Priority">
-                                    <input {% if task.date is not null %} value="{{ task.date|date('-m-d') }}" {% endif %}
-                                            type="date" id="date" name="date">
-
-                                    <label for="done">DONE</label>
-                                    <input value="done" name="done" type="checkbox" id="done" {% if task.done %}checked{% endif %}>
-                                </form>
-                            </div>
-                            <div class="col-lg-2">
-                                <form id="assignUser" action="{{ path('assignUser', {'taskid' : task.id}) }}" method="post">
-                                    <select name="userid" id="user">
-                                        {% if task.user is null %}
-                                            <option value="" disabled selected>Pick a user</option>
-                                        {% else %}
-                                            <option selected value="{{ task.user.id }}">{{ task.user.pseudo }}</option>
-                                        {% endif %}
-                                        {% for user in users %}
-                                            {% if task.user is not null %}
-                                                {% if task.user.id != user.id %}
-                                                    <option value="{{ user.id }}">{{ user.pseudo }}</option>
-                                                {% endif %}
-                                            {% else %}
-                                                <option value="{{ user.id }}">{{ user.pseudo }}</option>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </select>
-                                </form>
-                            </div>
-                            <div class="col-lg-5">
-                                <button form="assignUser" type="submit" class="btn btn-success">Assign user</button>
-                                <button form="editTask" type="submit" class="btn btn-primary">Edit Task</button>
-                                <a href="{{ path('deletetask', {'id' : task.id}) }}" class="btn btn-danger">
-                                    Delete Task
-                                </a>
-                            </div>
-                        </div>
-
-
-
-                        {#<span class="secondary-content float-right">#}
-                            {##}
-                        {#</span>#}
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <div class="col-lg-3 d-flex justify-content-around">
-            <form action="{{ path('addtask') }}" method="post">
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input name="name" type="text" class="form-control" id="name" placeholder="Name" required="required">
-                </div>
-                <div class="form-group">
-                    <label for="priority">Priority</label>
-                    <input name="priority" type="number" class="form-control" id="priority" placeholder="Priority">
-                </div>
-                <div class="form-group">
-                    <label for="user">User</label>
-                    <select name="userid" class="form-control" id="user">
-                        <option disabled selected value></option>
-                        {% for user in users %}
-                            <option value="{{ user.id }}">{{ user.pseudo }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="date">Date</label>
-                    <fieldset>
-                        <legend>Selectionner une date</legend>
-                        <input type="date" id="date" name="date">
-                    </fieldset>
-                </div>
-                <button type="submit" class="btn btn-primary">Add task</button>
-            </form>
-
-            <form action="{{ path('adduser') }}" method="post">
-                <div class="form-group">
-                    <label for="pseudo">Pseudo</label>
-                    <input name="pseudo" type="text" class="form-control" id="pseudo" placeholder="Pseudo" required="required">
-                </div>
-                <button type="submit" class="btn btn-primary">Add user</button>
-            </form>
-        </div>
-
-        {% if users is not null and users is not empty %}
-            <ul>User list
-                {% for user in users %}
-                    <li>
-                        <a href="{{ path('userlist', {'id' : user.id }) }}">{{ user.pseudo }}</a>
-                        <a href="{{ path('removeuser', {'id' : user.id}) }}" class="btn btn-danger">
-                            Remove user
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
+        <a href="{{ path('todolist', {'filter' : 'all'}) }}" class="btn btn-info m-2">
+            Filter all
+        </a>
+        {% if filter is not null %}
+            Actually filter by {{ filter }}
         {% endif %}
-
     </div>
+
+    <div class="col-lg-12 d-flex justify-content-start">
+        <a href="{{ path('todolist', {'sort' : 'date'}) }}" class="btn btn-info m-2">
+            Sort by date
+        </a>
+
+        <a href="{{ path('todolist', {'sort' : 'name'}) }}" class="btn btn-info m-2">
+            Sort by name
+        </a>
+
+        <a href="{{ path('todolist', {'sort' : 'priority'}) }}" class="btn btn-info m-2">
+            Sort by priority
+        </a>
+        {% if sort is not null %}
+            Actually sort by {{ sort }}
+        {% endif %}
+    </div>
+
+
+
+    <div class="col-lg-8 d-flex justify-content-center row">
+
+        {% for task in tasks %}
+
+            <div class="card col-lg-3" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{ task.name }}
+                        {% if task.done is defined %}
+                            {% if task.done %}
+                                - terminé
+                            {% endif %}
+                        {% endif %}
+                    </h5>
+                    {% if task.user is not null %}
+                        <h6 class="card-subtitle mb-2 text-muted">Attribué à {{ task.user.pseudo }}</h6>
+                    {% endif %}
+
+                    {% if task.priority is defined %}
+                        <p>{{ task.priority }}</p>
+                    {% endif %}
+
+                    {% if task.date is defined %}
+                        <p class="card-text"><small class="text-muted">{{ task.date|date('Y-m-d') }}</small></p>
+                    {% endif %}
+                    <a href="{{ path('edittask', {'id' : task.id}) }}" class="btn btn-primary">
+                        Edit Task
+                    </a>
+                    <a href="{{ path('deletetask', {'id' : task.id}) }}" class="btn btn-danger">
+                        Delete Task
+                    </a>
+                </div>
+            </div>
+
+        {% endfor %}
+    </div>
+
 {% endblock %}
