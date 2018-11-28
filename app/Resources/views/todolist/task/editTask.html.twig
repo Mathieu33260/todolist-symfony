@@ -4,10 +4,9 @@
 
 {% block body %}
 
-    {% include 'todolist/task/partials/form.html.twig'
-        with {
+    {% include 'todolist/task/partials/form.html.twig' with {
         'action': path('edittask', {'id' : id}),
-        'methode': 'PUT'
+        'type': 'edit'
     } %}
 
 {% endblock %}

@@ -1,4 +1,4 @@
-{{ form_start(taskForm, {'action': action, 'method': methode,
+{{ form_start(taskForm, {'action': action, 'method': 'POST',
     'attr': {'class': 'col-lg-6'}}) }}
 <div class="form-group">
     {{ form_label(taskForm.name) }}
@@ -16,7 +16,7 @@
     {{ form_label(taskForm.date) }}
     {{ form_widget(taskForm.date, { 'attr': {'class': 'form-control'}}) }}
 </div>
-{% if methode == 'PUT' %}
+{% if type == 'edit' %}
 <div class="form-group">
     {{ form_label(taskForm.done) }}
     {{ form_widget(taskForm.done, { 'attr': {'class': 'form-control'}}) }}

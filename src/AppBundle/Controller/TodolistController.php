@@ -78,8 +78,6 @@ class TodolistController extends Controller
      */
     public function updateAction(Task $task, Request $request)
     {
-        //$task->setName($task->getName());
-
         $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
 

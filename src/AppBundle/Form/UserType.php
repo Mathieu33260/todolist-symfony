@@ -16,7 +16,7 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('pseudo', TextType::class, ['label' => 'Pseudo'])
+            ->add('pseudo', TextType::class, ['label' => 'Pseudo', 'required' => true])
             ->add('tasks', EntityType::class,
                 [
                     'label' => 'Tasks',
@@ -26,7 +26,6 @@ class UserType extends AbstractType
                     'required' => false,
                     'multiple' => true
                 ])
-            ->add('submit', SubmitType::class, ['label' => 'Créer'])
         ;
     }
 

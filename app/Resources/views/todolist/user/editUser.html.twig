@@ -4,10 +4,6 @@
 
 {% block body %}
 
-    {% include 'todolist/user/partials/form.html.twig'
-        with {
-        'action': path('edituser', {'id' : id}),
-        'methode': 'PUT'
-    } %}
+    {% include 'todolist/user/partials/form.html.twig' with {'action': path('edituser', {'id' : id})} %}
 
 {% endblock %}

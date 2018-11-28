@@ -31,8 +31,7 @@ class TaskType extends AbstractType
                     'placeholder' => 'Choose a user',
                     'required' => true
                 ])
-            ->add('date', DateType::class, ['label' => 'Date'])
-            ->add('submit', SubmitType::class, ['label' => 'Envoyer'])
+            ->add('date', DateType::class, ['label' => 'Date', 'required' => false])
         ;
     }
 
